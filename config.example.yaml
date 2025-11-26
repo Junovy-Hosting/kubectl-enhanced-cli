@@ -1,0 +1,60 @@
+# kubectl-enhanced-cli Configuration
+# Location: ~/.config/kubectl-enhanced/config.yaml
+
+# Global defaults applied to all clusters unless overridden
+defaults:
+  require_confirmation: false
+  blocked_actions: []
+
+# Explicit cluster rules (takes priority over tier patterns)
+# Use exact context names or glob patterns
+clusters:
+  # Example: exact match for a production cluster
+  # production-us-east-1:
+  #   tier: production
+  #   require_confirmation: [delete, drain]
+  #   blocked_actions: []
+  
+  # Example: pattern match for all staging clusters
+  # staging-*:
+  #   tier: staging
+  #   require_confirmation: [delete]
+  #   blocked_actions: []
+
+# Tier-based rules (fallback when no explicit cluster match)
+# Clusters are matched against tier patterns to determine their tier
+tiers:
+  production:
+    patterns:
+      - "*-prod"
+      - "*-production"
+      - "prod-*"
+      - "production-*"
+    require_confirmation:
+      - delete
+      - drain
+    blocked_actions: []
+  
+  staging:
+    patterns:
+      - "*-staging"
+      - "*-stg"
+      - "staging-*"
+      - "stg-*"
+    require_confirmation:
+      - delete
+    blocked_actions: []
+  
+  development:
+    patterns:
+      - "*-dev"
+      - "*-development"
+      - "dev-*"
+      - "development-*"
+      - "local*"
+      - "minikube"
+      - "docker-desktop"
+      - "kind-*"
+    require_confirmation: []
+    blocked_actions: []
+
